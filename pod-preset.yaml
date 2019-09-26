@@ -1,0 +1,11 @@
+apiVersion: settings.k8s.io/v1alpha1
+kind: PodPreset
+metadata:
+  name: kfp-runner-default-pipeline
+spec:
+  selector:
+    matchLabels:
+      com.github.jw3.kfp-runner/pipeline: "true"
+  env:
+    - name: KF_PIPELINE_ID
+      value: "0000000000000"
