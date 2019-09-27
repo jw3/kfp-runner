@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
-  name: artifact-sensor
+  name: kfp-sensor
   labels:
     sensors.argoproj.io/sensor-controller-instanceid: argo-events
     # sensor controller will use this label to match with it's own version
@@ -26,11 +26,27 @@ spec:
         name: artifact-workflow-trigger
         group: ""
         version: v1
-        kind: Pod
+        kind: Job
         source:
-          url:
-            path: "https://github.com/jw3/kfp-runner/pod.yaml"
-            verifyCert: false
+          inline: |
+            apiVersion: batch/v1
+            kind: Job
+            metadata:
+              generateName: kfp-runner-
+            spec:
+              template:
+                metadata:
+                  labels:
+                    com.github.jw3.kfp-runner/pipeline: "true"
+                spec:
+                  restartPolicy: OnFailure
+                  containers:
+                    - name: main
+                      image: jwiii/kfp-runner:latest
+                      args:
+                        - job_name
+                        - -e
+                        - hardcoded-experiment
       # The container args from the workflow are overridden by the s3 notification key
       resourceParameters:
         - src:
