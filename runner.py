@@ -14,4 +14,4 @@ if __name__ == "__main__":
     if not eid:
         eid = client.create_experiment(args.experiment)
 
-    client.run_pipeline(eid, args.name, args.job_name)
+    client.run_pipeline(eid, args.job_name, pipeline_id=args.pipeline)
