@@ -18,7 +18,7 @@ if __name__ == "__main__":
         splits = job_name.split(args.split_name)
         if len(splits) < 2:
             # todo;; can this check move into argparse?
-            raise ValueError(f"invalid split of the job name [{job_name}] with [{args.split_str}]")
+            raise ValueError(f"invalid split of the job name [{job_name}] with [{args.split_name}]")
         exp_name = splits[0]
         job_name = splits[-1]
     else:
