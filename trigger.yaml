@@ -44,12 +44,10 @@ spec:
                     - name: main
                       image: jwiii/kfp-runner:latest
                       args:
-                        - job_name
-                        - -e
-                        - hardcoded-experiment
+                        - __s3_object_key__
       # The container args from the workflow are overridden by the s3 notification key
       resourceParameters:
         - src:
             event: "artifact-gateway:example-1"
             path: s3.object.key
-          dest: spec.templates.0.container.args.0
+          dest: spec.template.spec.containers.0.args.0
