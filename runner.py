@@ -1,6 +1,6 @@
 import configargparse as argparse
+import urllib.parse as url
 import kfp
-import os
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -10,7 +10,7 @@ if __name__ == "__main__":
     parser.add_argument("--split_on", type=str, default='/', help="Split pattern; derive experiment from job_name")
     args = parser.parse_args()
 
-    job_name: str = args.job_name
+    job_name: str = url.unquote(args.job_name)
 
     if args.experiment_name:
         exp_name = args.experiment_name
