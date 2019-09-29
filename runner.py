@@ -5,6 +5,7 @@ import kfp
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("job_name", type=str, help="Name for job")
+    parser.add_argument("-b", "--bucket", type=str, default='', help="Optional S3 bucket source")
     parser.add_argument("-e", "--experiment_name", type=str, required=False, help="Experiment name")
     parser.add_argument("-p", "--pipeline_id", type=str, required=True, env_var='KF_PIPELINE_ID', help="Pipeline ID")
     parser.add_argument("--split_on", type=str, default='/', help="Split pattern; derive experiment from job_name")
@@ -29,13 +30,18 @@ if __name__ == "__main__":
 
     client = kfp.Client()
 
+    descriptor = src_name
+    if args.bucket:
+        exp_name = f"[{args.bucket}] {exp_name}"
+        descriptor = f"s3://{args.bucket}/{src_name}"
+
     try:
         exp_id = client.get_experiment(experiment_name=exp_name)
     except ValueError:
         exp_id = client.create_experiment(exp_name)
 
     pipeline_params = {
-        "descriptor": src_name
+        "descriptor": descriptor
     }
     r = client.run_pipeline(exp_id.id, job_name, pipeline_id=args.pipeline_id, params=pipeline_params)
 
