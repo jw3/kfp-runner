@@ -10,7 +10,8 @@ if __name__ == "__main__":
     parser.add_argument("--split_on", type=str, default='/', help="Split pattern; derive experiment from job_name")
     args = parser.parse_args()
 
-    job_name: str = url.unquote(args.job_name)
+    src_name: str = url.unquote(args.job_name)
+    job_name = src_name
 
     if args.experiment_name:
         exp_name = args.experiment_name
@@ -33,6 +34,9 @@ if __name__ == "__main__":
     except ValueError:
         exp_id = client.create_experiment(exp_name)
 
-    r = client.run_pipeline(exp_id.id, job_name, pipeline_id=args.pipeline_id)
+    pipeline_params = {
+        "descriptor": src_name
+    }
+    r = client.run_pipeline(exp_id.id, job_name, pipeline_id=args.pipeline_id, params=pipeline_params)
 
     print(r)
